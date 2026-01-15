@@ -1,38 +1,32 @@
-// Sorting Algorithm Visualizer - Bubble Sort
-// Arrays to visualize
+import g4p_controls.*;
+
 int[] values;
 int arraySize = 100;
 
-// Animation variables
-int i = 0;  // outer loop counter
-int j = 0;  // inner loop counter
+int i = 0;
+int j = 0;
 boolean sorting = false;
 boolean sorted = false;
 
 void setup() {
   size(800, 600);
+  createGUI();
   values = new int[arraySize];
   
-  // Initialize with random values
   for (int k = 0; k < arraySize; k++) {
     values[k] = int(random(height - 50));
   }
   
-  frameRate(30); // Control animation speed
+  frameRate(60);
 }
 
 void draw() {
   background(30);
-  
-  // Draw all bars
   drawBars();
   
-  // Perform one step of bubble sort if sorting
   if (sorting && !sorted) {
     bubbleSortStep();
   }
-  
-  // Display instructions
   displayText();
 }
 
@@ -40,14 +34,17 @@ void drawBars() {
   float barWidth = width / float(arraySize);
   
   for (int k = 0; k < arraySize; k++) {
-    // Color coding
     if (sorted) {
       fill(0, 255, 0); // Green when sorted
-    } else if (k == j || k == j + 1) {
-      fill(255, 0, 0); // Red for comparing elements
-    } else if (k > arraySize - i - 1) {
+    }
+    else if (k == j || k == j + 1) {
+      fill(255, 0, 0);
+    }
+    else if (k > arraySize - i - 1) {
       fill(100, 200, 100); // Light green for sorted portion
-    } else {
+    }
+    
+    else {
       fill(200); // White/gray for unsorted
     }
     
@@ -56,23 +53,19 @@ void drawBars() {
 }
 
 void bubbleSortStep() {
-  // Bubble sort algorithm - one step at a time
   if (j < arraySize - i - 1) {
-    // Compare adjacent elements
-    if (values[j] > values[j + 1]) {
-      // Swap
+    if ( values[j] > values[j + 1] ) {
       int temp = values[j];
       values[j] = values[j + 1];
       values[j + 1] = temp;
     }
     j++;
-  } else {
-    // Move to next pass
+  }
+  else {
     j = 0;
     i++;
     
-    // Check if we're done
-    if (i >= arraySize - 1) {
+    if ( i >= arraySize - 1) {
       sorted = true;
       sorting = false;
     }
@@ -89,16 +82,6 @@ void displayText() {
     textSize(24);
     fill(0, 255, 0);
     text("SORTED!", width/2 - 50, 30);
-  }
-}
-
-void keyPressed() {
-  if (key == ' ') {
-    // Toggle sorting
-    sorting = !sorting;
-  } else if (key == 'r' || key == 'R') {
-    // Reset
-    resetArray();
   }
 }
 
