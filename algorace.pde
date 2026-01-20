@@ -1,212 +1,51 @@
-<<<<<<< HEAD:algorace.pde
-// Sorting Algorithm Visualizer - Bubble Sort
-// Arrays to visualize
-int[] values;
-int arraySize = 100;
-
-// Animation variables
-int i = 0;  // outer loop counter
-int j = 0;  // inner loop counter
-boolean sorting = false;
-boolean sorted = false;
-
-void setup() {
-  size(800, 600);
-  values = new int[arraySize];
-  
-  // Initialize with random values
-  for (int k = 0; k < arraySize; k++) {
-    values[k] = int(random(height - 50));
-  }
-  
-  frameRate(30); // Control animation speed
-}
-
-void draw() {
-  background(30);
-  
-  // Draw all bars
-  drawBars();
-  
-  // Perform one step of bubble sort if sorting
-  if (sorting && !sorted) {
-    bubbleSortStep();
-  }
-  
-  // Display instructions
-  displayText();
-}
-
-void drawBars() {
-  float barWidth = width / float(arraySize);
-  
-  for (int k = 0; k < arraySize; k++) {
-    // Color coding
-    if (sorted) {
-      fill(0, 255, 0); // Green when sorted
-    } else if (k == j || k == j + 1) {
-      fill(255, 0, 0); // Red for comparing elements
-    } else if (k > arraySize - i - 1) {
-      fill(100, 200, 100); // Light green for sorted portion
-    } else {
-      fill(200); // White/gray for unsorted
-    }
-    
-    rect(k * barWidth, height - values[k], barWidth, values[k]);
-  }
-}
-
-void bubbleSortStep() {
-  // Bubble sort algorithm - one step at a time
-  if (j < arraySize - i - 1) {
-    // Compare adjacent elements
-    if (values[j] > values[j + 1]) {
-      // Swap
-      int temp = values[j];
-      values[j] = values[j + 1];
-      values[j + 1] = temp;
-    }
-    j++;
-  } else {
-    // Move to next pass
-    j = 0;
-    i++;
-    
-    // Check if we're done
-    if (i >= arraySize - 1) {
-      sorted = true;
-      sorting = false;
-    }
-  }
-}
-
-void displayText() {
-  fill(255);
-  textSize(16);
-  text("Press SPACE to start/pause", 10, 20);
-  text("Press 'R' to reset", 10, 40);
-  
-  if (sorted) {
-    textSize(24);
-    fill(0, 255, 0);
-    text("SORTED!", width/2 - 50, 30);
-  }
-}
-
-void keyPressed() {
-  if (key == ' ') {
-    // Toggle sorting
-    sorting = !sorting;
-  } else if (key == 'r' || key == 'R') {
-    // Reset
-    resetArray();
-  }
-}
-
-void resetArray() {
-  for (int k = 0; k < arraySize; k++) {
-    values[k] = int(random(height - 50));
-  }
-  i = 0;
-  j = 0;
-  sorting = false;
-  sorted = false;
-}
-=======
 import g4p_controls.*;
 
-int[] values;
+Sorter sorter;
 int arraySize = 100;
-
-int i = 0;
-int j = 0;
-boolean sorting = false;
-boolean sorted = false;
 
 void setup() {
   size(800, 600);
   createGUI();
-  values = new int[arraySize];
-  
-  for (int k = 0; k < arraySize; k++) {
-    values[k] = int(random(height - 50));
-  }
-  
+  sorter = new Sorter(arraySize, height - 100);
   frameRate(60);
 }
 
 void draw() {
   background(30);
-  drawBars();
   
-  if (sorting && !sorted) {
-    bubbleSortStep();
-  }
-  displayText();
+  sorter.display(); // Draw the bars
+  sorter.sortStep(); // Draw the bars
+  displayStats(); // Display stats
 }
 
-void drawBars() {
-  float barWidth = width / float(arraySize);
-  
-  for (int k = 0; k < arraySize; k++) {
-    if (sorted) {
-      fill(0, 255, 0); // Green when sorted
-    }
-    else if (k == j || k == j + 1) {
-      fill(255, 0, 0);
-    }
-    else if (k > arraySize - i - 1) {
-      fill(100, 200, 100); // Light green for sorted portion
-    }
-    
-    else {
-      fill(200); // White/gray for unsorted
-    }
-    
-    rect(k * barWidth, height - values[k], barWidth, values[k]);
-  }
-}
-
-void bubbleSortStep() {
-  if (j < arraySize - i - 1) {
-    if ( values[j] > values[j + 1] ) {
-      int temp = values[j];
-      values[j] = values[j + 1];
-      values[j + 1] = temp;
-    }
-    j++;
-  }
-  else {
-    j = 0;
-    i++;
-    
-    if ( i >= arraySize - 1) {
-      sorted = true;
-      sorting = false;
-    }
-  }
-}
-
-void displayText() {
+void displayStats() {
   fill(255);
   textSize(16);
-  text("Press SPACE to start/pause", 10, 20);
-  text("Press 'R' to reset", 10, 40);
   
-  if (sorted) {
-    textSize(24);
-    fill(0, 255, 0);
-    text("SORTED!", width/2 - 50, 30);
+  // Display current algorithm
+  textSize(20);
+  fill(100, 200, 255);
+  String algoName = "";
+  if (sorter.algorithm == 0) {
+    algoName = "BUBBLE SORT";
   }
-}
+  if (sorter.algorithm == 1) {
+    algoName = "INSERTION SORT";
+  }
+  if (sorter.algorithm == 2) {
+    algoName = "MERGE SORT";
+  }
 
-void resetArray() {
-  for (int k = 0; k < arraySize; k++) {
-    values[k] = int(random(height - 50));
+  // Display stats
+  text("Algorithm: " + algoName, 10, 30);
+  textSize(16);
+  fill(255, 200, 100);
+  text("Comparisons: " + sorter.comparisons, 10, 60);
+  text("Swaps: " + sorter.swaps, 10, 85);
+  
+  if (sorter.sorted) {
+    textSize(32);
+    fill(0, 255, 0);
+    text("SORTED!", width/2 - 80, 50);
   }
-  i = 0;
-  j = 0;
-  sorting = false;
-  sorted = false;
 }
->>>>>>> 9148d86c53b8c14d10e5e7df924015b6592464e9:algorace/algorace.pde

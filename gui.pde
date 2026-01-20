@@ -19,12 +19,25 @@ synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:windo
 } //_CODE_:window1:568766:
 
 public void restart_click(GButton source, GEvent event) { //_CODE_:restart:320607:
-  resetArray();
+  sorter.reset();
 } //_CODE_:restart:320607:
 
 public void start_click(GButton source, GEvent event) { //_CODE_:start:738163:
-  sorting = !sorting;
+  sorter.toggleSorting();
 } //_CODE_:start:738163:
+
+public void bubbleSortButton_click(GButton source, GEvent event) { //_CODE_:bubbleSortButton:552353:
+  sorter.setAlgorithm(0);
+} //_CODE_:bubbleSortButton:552353:
+
+public void insertionSortButtonClick(GButton source, GEvent event) { //_CODE_:insertionSortButton:297208:
+  sorter.setAlgorithm(1);
+} //_CODE_:insertionSortButton:297208:
+
+public void mergeSortButtonClick(GButton source, GEvent event) { //_CODE_:mergeSortButton:906100:
+  sorter.mergeSortStep();
+  //sorter.setAlgorithm(2);
+} //_CODE_:mergeSortButton:906100:
 
 
 
@@ -39,12 +52,24 @@ public void createGUI(){
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
-  restart = new GButton(window1, 20, 20, 80, 30);
+  restart = new GButton(window1, 135, 20, 80, 30);
   restart.setText("Restart");
   restart.addEventHandler(this, "restart_click");
-  start = new GButton(window1, 20, 60, 80, 30);
+  start = new GButton(window1, 25, 20, 80, 30);
   start.setText("Start");
   start.addEventHandler(this, "start_click");
+  bubbleSortButton = new GButton(window1, 80, 80, 80, 30);
+  bubbleSortButton.setText("Bubble Sort");
+  bubbleSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  bubbleSortButton.addEventHandler(this, "bubbleSortButton_click");
+  insertionSortButton = new GButton(window1, 70, 140, 100, 30);
+  insertionSortButton.setText("Insertion Sort");
+  insertionSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  insertionSortButton.addEventHandler(this, "insertionSortButtonClick");
+  mergeSortButton = new GButton(window1, 80, 200, 80, 30);
+  mergeSortButton.setText("Merge Sort");
+  mergeSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  mergeSortButton.addEventHandler(this, "mergeSortButtonClick");
   window1.loop();
 }
 
@@ -53,3 +78,6 @@ public void createGUI(){
 GWindow window1;
 GButton restart; 
 GButton start; 
+GButton bubbleSortButton; 
+GButton insertionSortButton; 
+GButton mergeSortButton; 
