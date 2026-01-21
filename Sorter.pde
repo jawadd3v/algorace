@@ -25,7 +25,15 @@ class Sorter {
   int insertionKey = 0;
   boolean insertionKeySet = false;
   
-  // Merge sort variables Placeholder
+  // Merge sort variables
+  int mergeSize = 1;
+  int mergeStart = 0;
+  int mergeMid = 0;
+  int mergeEnd = 0;
+  int mergeLeft = 0;
+  int mergeRight = 0;
+  int mergeIndex = 0;
+  boolean mergeCopying = false;
   
   // Visual highlighting
   int highlightIndex1 = -1;
@@ -54,8 +62,10 @@ class Sorter {
     insertionI = 1;
     insertionJ = 0;
     insertionKeySet = false;
-    // Merge sort variables placeholder
-
+    mergeSize = 1;
+    mergeCopying = false;
+    highlightIndex1 = -1;
+    highlightIndex2 = -1;
   }
   
   void setAlgorithm(int algo) {
@@ -71,17 +81,17 @@ class Sorter {
   
   void sortStep() {
     if (!sorting || sorted) return;
-    
-    switch(algorithm) {
-      case 0:
-        bubbleSortStep();
-        break;
-      case 1:
-        insertionSortStep();
-        break;
-      case 2:
-        mergeSortStep();
-        break;
+  
+    if (algorithm == 0) {
+      bubbleSortStep();
+    }
+  
+    if (algorithm == 1) {
+      insertionSortStep();
+    }
+  
+    if (algorithm == 2) {
+      mergeSortStep();
     }
   }
   
@@ -118,7 +128,13 @@ class Sorter {
         insertionKeySet = true;
       }
       
-      highlightIndex1 = insertionJ >= 0 ? insertionJ : 0;
+      if (insertionJ >= 0) {
+        highlightIndex1 = insertionJ;
+      } 
+      else {
+        highlightIndex1 = 0;
+      }
+      
       highlightIndex2 = insertionJ + 1;
       
       if (insertionJ >= 0) {
@@ -127,17 +143,20 @@ class Sorter {
           values[insertionJ + 1] = values[insertionJ];
           swaps++;
           insertionJ--;
-        } else {
+        } 
+        else {
           values[insertionJ + 1] = insertionKey;
           insertionI++;
           insertionKeySet = false;
         }
-      } else {
+      } 
+      else {
         values[0] = insertionKey;
         insertionI++;
         insertionKeySet = false;
       }
-    } else {
+    } 
+    else {
       sorted = true;
       sorting = false;
       highlightIndex1 = -1;
@@ -146,7 +165,57 @@ class Sorter {
   }
   
   void mergeSortStep() {
-    print("Under Works!");
+    // Iterative merge sort - one merge operation per frame
+    if (mergeSize < size) {
+      if (mergeStart < size - 1) {
+        if (!mergeCopying) {
+          // Setup merge operation
+          mergeMid = min(mergeStart + mergeSize - 1, size - 1);
+          mergeEnd = min(mergeStart + mergeSize * 2 - 1, size - 1);
+          mergeLeft = mergeStart;
+          mergeRight = mergeMid + 1;
+          mergeIndex = mergeStart;
+          
+          // Copy to auxiliary array
+          for (int i = mergeStart; i <= mergeEnd; i++) {
+            auxArray[i] = values[i];
+          }
+          mergeCopying = true;
+        } else {
+          // One merge step
+          if (mergeIndex <= mergeEnd) {
+            highlightIndex1 = mergeLeft <= mergeMid ? mergeLeft : -1;
+            highlightIndex2 = mergeRight <= mergeEnd ? mergeRight : -1;
+            
+            if (mergeLeft <= mergeMid && (mergeRight > mergeEnd || auxArray[mergeLeft] <= auxArray[mergeRight])) {
+              comparisons++;
+              values[mergeIndex] = auxArray[mergeLeft];
+              mergeLeft++;
+            } else if (mergeRight <= mergeEnd) {
+              comparisons++;
+              values[mergeIndex] = auxArray[mergeRight];
+              mergeRight++;
+            }
+            swaps++;
+            mergeIndex++;
+          } else {
+            // Finished this merge
+            mergeCopying = false;
+            mergeStart = mergeEnd + 1;
+          }
+        }
+      } else {
+        // Move to next merge size
+        mergeSize *= 2;
+        mergeStart = 0;
+        mergeCopying = false;
+      }
+    } else {
+      sorted = true;
+      sorting = false;
+      highlightIndex1 = -1;
+      highlightIndex2 = -1;
+    }
   }
   
   void swap(int i, int j) {
@@ -162,13 +231,17 @@ class Sorter {
       // Color coding
       if (sorted) {
         fill(0, 255, 0); // Green when sorted
-      } else if (i == highlightIndex1 || i == highlightIndex2) {
+      } 
+      else if (i == highlightIndex1 || i == highlightIndex2) {
         fill(255, 0, 0); // Red for comparing/swapping
-      } else if (algorithm == 0 && i > size - bubbleI - 1) {
+      } 
+      else if (algorithm == 0 && i > size - bubbleI - 1) {
         fill(100, 200, 100); // Light green for bubble sorted portion
-      } else if (algorithm == 1 && i < insertionI) {
+      } 
+      else if (algorithm == 1 && i < insertionI) {
         fill(100, 200, 100); // Light green for insertion sorted portion
-      } else {
+      } 
+      else {
         fill(200); // White/gray for unsorted
       }
       

@@ -35,8 +35,7 @@ public void insertionSortButtonClick(GButton source, GEvent event) { //_CODE_:in
 } //_CODE_:insertionSortButton:297208:
 
 public void mergeSortButtonClick(GButton source, GEvent event) { //_CODE_:mergeSortButton:906100:
-  sorter.mergeSortStep();
-  //sorter.setAlgorithm(2);
+  sorter.setAlgorithm(2);
 } //_CODE_:mergeSortButton:906100:
 
 
