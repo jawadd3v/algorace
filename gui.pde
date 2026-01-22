@@ -44,8 +44,17 @@ public void arraySizeSliderChanged(GCustomSlider source, GEvent event) { //_CODE
 } //_CODE_:arraySizeSlider:231801:
 
 public void fpsSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:fpsSlider:976330:
-  frameRate(source.getValueI());
+  setFPS = source.getValueI();
+  frameRate(setFPS);
 } //_CODE_:fpsSlider:976330:
+
+public void quickSortButtonClicked(GButton source, GEvent event) { //_CODE_:quickSortButton:536758:
+  println("button1 - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:quickSortButton:536758:
+
+public void dryerSortButtonClicked(GButton source, GEvent event) { //_CODE_:dryerSortButton:401517:
+  println("dryerSortButton - GButton >> GEvent." + event + " @ " + millis());
+} //_CODE_:dryerSortButton:401517:
 
 
 
@@ -66,19 +75,19 @@ public void createGUI(){
   start = new GButton(window1, 25, 20, 80, 30);
   start.setText("Start");
   start.addEventHandler(this, "start_click");
-  bubbleSortButton = new GButton(window1, 80, 82, 80, 30);
+  bubbleSortButton = new GButton(window1, 20, 65, 80, 30);
   bubbleSortButton.setText("Bubble Sort");
   bubbleSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   bubbleSortButton.addEventHandler(this, "bubbleSortButton_click");
-  insertionSortButton = new GButton(window1, 70, 140, 100, 30);
+  insertionSortButton = new GButton(window1, 70, 155, 100, 30);
   insertionSortButton.setText("Insertion Sort");
   insertionSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   insertionSortButton.addEventHandler(this, "insertionSortButtonClick");
-  mergeSortButton = new GButton(window1, 80, 200, 80, 30);
+  mergeSortButton = new GButton(window1, 35, 110, 80, 30);
   mergeSortButton.setText("Merge Sort");
   mergeSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   mergeSortButton.addEventHandler(this, "mergeSortButtonClick");
-  arraySizeSlider = new GCustomSlider(window1, 8, 257, 100, 80, "grey_blue");
+  arraySizeSlider = new GCustomSlider(window1, 10, 225, 100, 80, "grey_blue");
   arraySizeSlider.setShowValue(true);
   arraySizeSlider.setLimits(50, 4, 250);
   arraySizeSlider.setNbrTicks(10);
@@ -87,15 +96,31 @@ public void createGUI(){
   arraySizeSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   arraySizeSlider.setOpaque(false);
   arraySizeSlider.addEventHandler(this, "arraySizeSliderChanged");
-  fpsSlider = new GCustomSlider(window1, 130, 255, 100, 80, "grey_blue");
+  fpsSlider = new GCustomSlider(window1, 130, 225, 100, 80, "grey_blue");
   fpsSlider.setShowValue(true);
-  fpsSlider.setLimits(1, 1, 500);
+  fpsSlider.setLimits(30, 1, 500);
   fpsSlider.setNbrTicks(6);
   fpsSlider.setShowTicks(true);
   fpsSlider.setNumberFormat(G4P.INTEGER, 0);
   fpsSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   fpsSlider.setOpaque(false);
   fpsSlider.addEventHandler(this, "fpsSliderChanged");
+  sizeLabel = new GLabel(window1, 20, 200, 80, 20);
+  sizeLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  sizeLabel.setText("Array Size");
+  sizeLabel.setOpaque(false);
+  fpsLabel = new GLabel(window1, 130, 200, 100, 20);
+  fpsLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  fpsLabel.setText("Sorting Speed");
+  fpsLabel.setOpaque(false);
+  quickSortButton = new GButton(window1, 125, 110, 80, 30);
+  quickSortButton.setText("Quick Sort");
+  quickSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  quickSortButton.addEventHandler(this, "quickSortButtonClicked");
+  dryerSortButton = new GButton(window1, 115, 65, 100, 30);
+  dryerSortButton.setText("Dryer/Bozo Sort");
+  dryerSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  dryerSortButton.addEventHandler(this, "dryerSortButtonClicked");
   window1.loop();
 }
 
@@ -109,3 +134,7 @@ GButton insertionSortButton;
 GButton mergeSortButton; 
 GCustomSlider arraySizeSlider; 
 GCustomSlider fpsSlider; 
+GLabel sizeLabel; 
+GLabel fpsLabel; 
+GButton quickSortButton; 
+GButton dryerSortButton; 

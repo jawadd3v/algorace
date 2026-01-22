@@ -2,12 +2,13 @@ import g4p_controls.*;
 
 Sorter sorter;
 int arraySize = 200;
+int setFPS = 30;
 
 void setup() {
   size(800, 600);
   createGUI();
   sorter = new Sorter(arraySize, height - 100);
-  frameRate(60);
+  frameRate(setFPS);
 }
 
 void draw() {
