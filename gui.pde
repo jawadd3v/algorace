@@ -38,6 +38,15 @@ public void mergeSortButtonClick(GButton source, GEvent event) { //_CODE_:mergeS
   sorter.setAlgorithm(2);
 } //_CODE_:mergeSortButton:906100:
 
+public void arraySizeSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:arraySizeSlider:231801:
+  arraySize = source.getValueI();
+  sorter = new Sorter(arraySize, height - 100);
+} //_CODE_:arraySizeSlider:231801:
+
+public void fpsSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:fpsSlider:976330:
+  frameRate(source.getValueI());
+} //_CODE_:fpsSlider:976330:
+
 
 
 // Create all the GUI controls. 
@@ -57,7 +66,7 @@ public void createGUI(){
   start = new GButton(window1, 25, 20, 80, 30);
   start.setText("Start");
   start.addEventHandler(this, "start_click");
-  bubbleSortButton = new GButton(window1, 80, 80, 80, 30);
+  bubbleSortButton = new GButton(window1, 80, 82, 80, 30);
   bubbleSortButton.setText("Bubble Sort");
   bubbleSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   bubbleSortButton.addEventHandler(this, "bubbleSortButton_click");
@@ -69,6 +78,24 @@ public void createGUI(){
   mergeSortButton.setText("Merge Sort");
   mergeSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   mergeSortButton.addEventHandler(this, "mergeSortButtonClick");
+  arraySizeSlider = new GCustomSlider(window1, 8, 257, 100, 80, "grey_blue");
+  arraySizeSlider.setShowValue(true);
+  arraySizeSlider.setLimits(50, 4, 250);
+  arraySizeSlider.setNbrTicks(10);
+  arraySizeSlider.setShowTicks(true);
+  arraySizeSlider.setNumberFormat(G4P.INTEGER, 0);
+  arraySizeSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  arraySizeSlider.setOpaque(false);
+  arraySizeSlider.addEventHandler(this, "arraySizeSliderChanged");
+  fpsSlider = new GCustomSlider(window1, 130, 255, 100, 80, "grey_blue");
+  fpsSlider.setShowValue(true);
+  fpsSlider.setLimits(1, 1, 500);
+  fpsSlider.setNbrTicks(6);
+  fpsSlider.setShowTicks(true);
+  fpsSlider.setNumberFormat(G4P.INTEGER, 0);
+  fpsSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  fpsSlider.setOpaque(false);
+  fpsSlider.addEventHandler(this, "fpsSliderChanged");
   window1.loop();
 }
 
@@ -80,3 +107,5 @@ GButton start;
 GButton bubbleSortButton; 
 GButton insertionSortButton; 
 GButton mergeSortButton; 
+GCustomSlider arraySizeSlider; 
+GCustomSlider fpsSlider; 

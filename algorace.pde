@@ -1,7 +1,7 @@
 import g4p_controls.*;
 
 Sorter sorter;
-int arraySize = 100;
+int arraySize = 200;
 
 void setup() {
   size(800, 600);
