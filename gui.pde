@@ -19,28 +19,42 @@ synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:windo
 } //_CODE_:window1:568766:
 
 public void restart_click(GButton source, GEvent event) { //_CODE_:restart:320607:
-  sorter.reset();
+  raceMode = false; // Cancel out race
+  racePhase = 0; // Reset race phase, Important for race logic
+  sorter.reset(); // Reset (used for normal not race)
 } //_CODE_:restart:320607:
 
 public void start_click(GButton source, GEvent event) { //_CODE_:start:738163:
-  sorter.toggleSorting();
+  if (!raceMode) {
+    // Make sure no changes are made during race
+    sorter.toggleSorting();
+  }
 } //_CODE_:start:738163:
 
 public void bubbleSortButton_click(GButton source, GEvent event) { //_CODE_:bubbleSortButton:552353:
-  sorter.setAlgorithm(0);
+  if (!raceMode) {
+    sorter.setAlgorithm(0);
+  }
 } //_CODE_:bubbleSortButton:552353:
 
 public void insertionSortButtonClick(GButton source, GEvent event) { //_CODE_:insertionSortButton:297208:
-  sorter.setAlgorithm(1);
+  if (!raceMode) {
+    sorter.setAlgorithm(1);
+  }
 } //_CODE_:insertionSortButton:297208:
 
 public void mergeSortButtonClick(GButton source, GEvent event) { //_CODE_:mergeSortButton:906100:
-  sorter.setAlgorithm(2);
+  if (!raceMode) {
+    sorter.setAlgorithm(2);
+  }
 } //_CODE_:mergeSortButton:906100:
 
 public void arraySizeSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:arraySizeSlider:231801:
-  arraySize = source.getValueI();
-  sorter = new Sorter(arraySize, height - 100);
+  if (!raceMode) {
+    arraySize = source.getValueI();
+    sorter = new Sorter(arraySize, height - 100);
+  }
+  
 } //_CODE_:arraySizeSlider:231801:
 
 public void fpsSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:fpsSlider:976330:
@@ -49,12 +63,32 @@ public void fpsSliderChanged(GCustomSlider source, GEvent event) { //_CODE_:fpsS
 } //_CODE_:fpsSlider:976330:
 
 public void quickSortButtonClicked(GButton source, GEvent event) { //_CODE_:quickSortButton:536758:
-  println("button1 - GButton >> GEvent." + event + " @ " + millis());
+  if (!raceMode) {
+    sorter.setAlgorithm(3);
+  }
 } //_CODE_:quickSortButton:536758:
 
-public void dryerSortButtonClicked(GButton source, GEvent event) { //_CODE_:dryerSortButton:401517:
-  println("dryerSortButton - GButton >> GEvent." + event + " @ " + millis());
-} //_CODE_:dryerSortButton:401517:
+public void bogoSortButtonClicked(GButton source, GEvent event) { //_CODE_:bogoSortButton:401517:
+  if (!raceMode) {
+    sorter.setAlgorithm(4);
+  }
+} //_CODE_:bogoSortButton:401517:
+
+public void algo1Changed(GDropList source, GEvent event) { //_CODE_:algoDropdown1:746276:
+  raceAlgo1 = algoDropdown1.getSelectedIndex();
+} //_CODE_:algoDropdown1:746276:
+
+public void algo2Changed(GDropList source, GEvent event) { //_CODE_:algoDropdown2:860288:
+  raceAlgo2 = algoDropdown2.getSelectedIndex();
+} //_CODE_:algoDropdown2:860288:
+
+public void raceButtonClicked(GButton source, GEvent event) { //_CODE_:raceButton:340994:
+  raceMode = true;
+  racePhase = 0;
+  sorter.reset();
+  sorter.setAlgorithm(raceAlgo1);
+  sorter.sorting = true;
+} //_CODE_:raceButton:340994:
 
 
 
@@ -65,62 +99,79 @@ public void createGUI(){
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);
   G4P.setMouseOverEnabled(false);
   surface.setTitle("Sketch Window");
-  window1 = GWindow.getWindow(this, "Window title", 0, 0, 240, 480, JAVA2D);
+  window1 = GWindow.getWindow(this, "Window title", 0, 0, 240, 520, JAVA2D);
   window1.noLoop();
   window1.setActionOnClose(G4P.KEEP_OPEN);
   window1.addDrawHandler(this, "win_draw1");
-  restart = new GButton(window1, 135, 20, 80, 30);
+  restart = new GButton(window1, 135, 15, 80, 30);
   restart.setText("Restart");
   restart.addEventHandler(this, "restart_click");
-  start = new GButton(window1, 25, 20, 80, 30);
+  start = new GButton(window1, 25, 15, 80, 30);
   start.setText("Start");
   start.addEventHandler(this, "start_click");
-  bubbleSortButton = new GButton(window1, 20, 65, 80, 30);
+  bubbleSortButton = new GButton(window1, 20, 55, 80, 30);
   bubbleSortButton.setText("Bubble Sort");
   bubbleSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   bubbleSortButton.addEventHandler(this, "bubbleSortButton_click");
-  insertionSortButton = new GButton(window1, 70, 155, 100, 30);
+  insertionSortButton = new GButton(window1, 70, 135, 100, 30);
   insertionSortButton.setText("Insertion Sort");
   insertionSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   insertionSortButton.addEventHandler(this, "insertionSortButtonClick");
-  mergeSortButton = new GButton(window1, 35, 110, 80, 30);
+  mergeSortButton = new GButton(window1, 35, 95, 80, 30);
   mergeSortButton.setText("Merge Sort");
   mergeSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   mergeSortButton.addEventHandler(this, "mergeSortButtonClick");
-  arraySizeSlider = new GCustomSlider(window1, 10, 225, 100, 80, "grey_blue");
+  arraySizeSlider = new GCustomSlider(window1, 10, 210, 100, 80, "grey_blue");
   arraySizeSlider.setShowValue(true);
-  arraySizeSlider.setLimits(50, 4, 250);
+  arraySizeSlider.setLimits(50, 4, 150);
   arraySizeSlider.setNbrTicks(10);
   arraySizeSlider.setShowTicks(true);
   arraySizeSlider.setNumberFormat(G4P.INTEGER, 0);
   arraySizeSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   arraySizeSlider.setOpaque(false);
   arraySizeSlider.addEventHandler(this, "arraySizeSliderChanged");
-  fpsSlider = new GCustomSlider(window1, 130, 225, 100, 80, "grey_blue");
+  fpsSlider = new GCustomSlider(window1, 130, 210, 100, 80, "grey_blue");
   fpsSlider.setShowValue(true);
-  fpsSlider.setLimits(30, 1, 500);
+  fpsSlider.setLimits(30, 1, 240);
   fpsSlider.setNbrTicks(6);
   fpsSlider.setShowTicks(true);
   fpsSlider.setNumberFormat(G4P.INTEGER, 0);
   fpsSlider.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   fpsSlider.setOpaque(false);
   fpsSlider.addEventHandler(this, "fpsSliderChanged");
-  sizeLabel = new GLabel(window1, 20, 200, 80, 20);
+  sizeLabel = new GLabel(window1, 20, 180, 80, 20);
   sizeLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   sizeLabel.setText("Array Size");
   sizeLabel.setOpaque(false);
-  fpsLabel = new GLabel(window1, 130, 200, 100, 20);
+  fpsLabel = new GLabel(window1, 130, 180, 100, 20);
   fpsLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   fpsLabel.setText("Sorting Speed");
   fpsLabel.setOpaque(false);
-  quickSortButton = new GButton(window1, 125, 110, 80, 30);
+  quickSortButton = new GButton(window1, 125, 95, 80, 30);
   quickSortButton.setText("Quick Sort");
   quickSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   quickSortButton.addEventHandler(this, "quickSortButtonClicked");
-  dryerSortButton = new GButton(window1, 115, 65, 100, 30);
-  dryerSortButton.setText("Dryer/Bozo Sort");
-  dryerSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
-  dryerSortButton.addEventHandler(this, "dryerSortButtonClicked");
+  bogoSortButton = new GButton(window1, 115, 55, 100, 30);
+  bogoSortButton.setText("Bogo Sort");
+  bogoSortButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  bogoSortButton.addEventHandler(this, "bogoSortButtonClicked");
+  algoDropdown1 = new GDropList(window1, 20, 350, 90, 120, 5, 10);
+  algoDropdown1.setItems(loadStrings("list_746276"), 1);
+  algoDropdown1.addEventHandler(this, "algo1Changed");
+  algoDropdown2 = new GDropList(window1, 130, 350, 90, 120, 5, 10);
+  algoDropdown2.setItems(loadStrings("list_860288"), 0);
+  algoDropdown2.addEventHandler(this, "algo2Changed");
+  Racing = new GLabel(window1, 60, 300, 120, 20);
+  Racing.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  Racing.setText("Racing Options");
+  Racing.setOpaque(false);
+  raceButton = new GButton(window1, 80, 480, 80, 30);
+  raceButton.setText("RACE!");
+  raceButton.addEventHandler(this, "raceButtonClicked");
+  instructions = new GLabel(window1, 30, 327, 180, 20);
+  instructions.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  instructions.setText("(pick 2 algos then click race)");
+  instructions.setOpaque(false);
   window1.loop();
 }
 
@@ -137,4 +188,9 @@ GCustomSlider fpsSlider;
 GLabel sizeLabel; 
 GLabel fpsLabel; 
 GButton quickSortButton; 
-GButton dryerSortButton; 
+GButton bogoSortButton; 
+GDropList algoDropdown1; 
+GDropList algoDropdown2; 
+GLabel Racing; 
+GButton raceButton; 
+GLabel instructions; 
